@@ -68,11 +68,10 @@
                 );
                 firstScript.parentNode.insertBefore(newScript, firstScript);
             }
-            function testResultsHaveBeenSubmitted() {
+            window.testResultsHaveBeenSubmitted = function () {
                 document.getElementById('testData')[textPropName] = 'Test results have been submitted. Thank you!';
             }
         }());
-
 
     </script>
 </body>
