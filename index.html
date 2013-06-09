@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Check: support for DOM event constructors</title>
+    <style type="text/css">
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            margin: 2em auto 2em auto;
+           	max-width: 650px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Check: support for DOM event constructors</h1>
+
+    Your browser supports DOM event constructors: <span id="testResult"></span>.
+    <p>
+    You can submit the following data to Browserscope, which records
+    per browser and version whether DOM event constructors are supported.
+
+    <pre id="testData"></pre>
+    <button id="submitButton">Submit to Browserscope</button>
+    <div id="testResultFeedback"></div>
+
+    <script type="text/javascript">
+        var _bTestResults;
+        (function() {
+            var supportsTextContent = document.getElementsByTagName('body')[0].textContent != undefined;
+            var textPropName = supportsTextContent ? 'textContent' : 'innerText';
+
+            var submitButton = document.getElementById('submitButton')
+            submitButton.onclick = submitTestResults;
+
+            runTest();
+
+            function runTest() {
+                try {
+                    if (new Event('submit', { bubbles: false }).bubbles !== false) {
+                        supports(false);
+                    } else if (new Event('submit', { bubbles: true }).bubbles !== true) {
+                        supports(false);
+                    } else {
+                        supports(true);
+                    }
+                } catch (e) {
+                    supports(false);
+                }
+            }
+            function supports(isSupporting) {
+                document.getElementById('testResult')[textPropName] = (isSupporting ? 'YES' : 'NO');
+                _bTestResults = {
+                    supports_dom_event_constructors: (isSupporting ? 1 : 0)
+                };
+                document.getElementById('testData')[textPropName] = JSON.stringify(_bTestResults, null, 4);
+            }
+
+            function submitTestResults() {
+                submitButton.disabled = true;
+                var testKey = 'CHANGE-THIS-TO-YOUR-TEST-KEY';
+                var newScript = document.createElement('script');
+                var firstScript = document.getElementsByTagName('script')[0];
+                newScript.src = (
+                    'http://www.browserscope.org/user/beacon/'
+                    + testKey
+                    + '?callback=testResultsHaveBeenSubmitted'
+                );
+                firstScript.parentNode.insertBefore(newScript, firstScript);
+            }
+            function testResultsHaveBeenSubmitted() {
+                document.getElementById('testData')[textPropName] = 'Test results have been submitted. Thank you!';
+            }
+        }());
+
+
+    </script>
+</body>
+</html>
